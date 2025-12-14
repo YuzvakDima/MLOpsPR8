@@ -1,6 +1,6 @@
 project:
-  name: "mushroom_classification_baseline"
-  description: "Manual Baseline: Random Forest without odor feature"
+  name: "mushroom_classification_final"
+  description: "Comparison of Manual Baseline vs AutoML"
   seed: 42
 
 paths:
@@ -10,20 +10,25 @@ paths:
 
 mlflow:
   tracking_uri: "file:./mlruns"
-  # Змінили назву експерименту, щоб відділити його від майбутніх тестів
-  experiment_name: "mushroom_rf_no_odor"
+  experiment_name: "mushroom_rf_no_odor" # Базове ім'я експерименту
 
 data:
   target_column: "class"
   test_size: 0.2
   stratify: true
-  # ВАЖЛИВО: Саме тут ми вказуємо, що цю колонку треба викинути
-  drop_columns: ["odor"]
+  drop_columns: ["odor"]  # Видаляємо для обох експериментів!
 
-# Нова секція спеціально для Random Forest
+# --- Налаштування для Baseline (Random Forest) ---
 model:
   type: "RandomForestClassifier"
   n_estimators: 100
   max_depth: 10
   min_samples_split: 5
-  class_weight: "balanced"  # Допомагає, якщо є дисбаланс класів
+  class_weight: "balanced"
+
+# --- Налаштування для AutoML (FLAML) ---
+automl:
+  engine: "flaml"
+  time_budget: 60        # Час на пошук у секундах (поставив 60, щоб ти довго не чекав)
+  metric: "accuracy"
+  task: "classification"

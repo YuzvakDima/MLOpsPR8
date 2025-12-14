@@ -178,6 +178,33 @@ def main(cfg: DictConfig):
             signature=signature,
             input_example=X_train.iloc[:5]
         )
+
+        # 9. Feature Importance Analysis (Додаємо цей блок)
+        print("Calculating feature importance...")
+        
+        # Отримуємо доступ до моделі з пайплайну
+        rf_model = pipeline.named_steps['classifier']
+        
+        # Отримуємо назви колонок після видалення 'odor'
+        feature_names = X.columns.tolist()
+        
+        # Отримуємо важливість
+        importances = rf_model.feature_importances_
+        indices = np.argsort(importances)[::-1] # Сортуємо від найважливішого
+
+        # Будуємо графік топ-10 ознак
+        plt.figure(figsize=(10, 6))
+        plt.title("Top 10 Feature Importances (No Odor)")
+        plt.bar(range(10), importances[indices[:10]], align="center")
+        plt.xticks(range(10), [feature_names[i] for i in indices[:10]], rotation=45, ha='right')
+        plt.tight_layout()
+        
+        filename_feat = "feature_importance.png"
+        plt.savefig(filename_feat)
+        mlflow.log_artifact(filename_feat)
+        plt.close()
+        
+        print(f"Top feature: {feature_names[indices[0]]} (Importance: {importances[indices[0]]:.4f})")
         
         print("Run complete. Check MLflow UI.")
 
