@@ -1,7 +1,7 @@
 project:
-  name: "mushroom_classification_automl"
-  description: "Predicting mushroom edibility with AutoML and MLflow tracking"
-  seed: 42  # Глобальний random_state для повної відтворюваності
+  name: "mushroom_classification_baseline"
+  description: "Manual Baseline: Random Forest without odor feature"
+  seed: 42
 
 paths:
   raw_data: "data/raw/mushrooms.csv"
@@ -9,19 +9,21 @@ paths:
   output_dir: "outputs/"
 
 mlflow:
-  tracking_uri: "file:./mlruns"  # Локальне збереження
-  experiment_name: "mushroom_automl_baseline"
+  tracking_uri: "file:./mlruns"
+  # Змінили назву експерименту, щоб відділити його від майбутніх тестів
+  experiment_name: "mushroom_rf_no_odor"
 
 data:
   target_column: "class"
   test_size: 0.2
-  stratify: true                 # Критично важливо для задач класифікації
+  stratify: true
+  # ВАЖЛИВО: Саме тут ми вказуємо, що цю колонку треба викинути
+  drop_columns: ["odor"]
 
-automl:
-  engine: "flaml"                # Рекомендую FLAML або H2O для швидких результатів
-  time_budget: 300               # 300 секунд (5 хвилин), як вказано в умовах
-  metric: "accuracy"             # Або 'roc_auc', якщо класи незбалансовані
-  task: "classification"
-  
-feature_engineering:
-  drop_features: []              # Сюди можна додати "odor", щоб ускладнити задачу
+# Нова секція спеціально для Random Forest
+model:
+  type: "RandomForestClassifier"
+  n_estimators: 100
+  max_depth: 10
+  min_samples_split: 5
+  class_weight: "balanced"  # Допомагає, якщо є дисбаланс класів
