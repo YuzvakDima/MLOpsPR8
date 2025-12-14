@@ -29,6 +29,6 @@ model:
 # --- Налаштування для AutoML (FLAML) ---
 automl:
   engine: "flaml"
-  time_budget: 60        # Час на пошук у секундах (поставив 60, щоб ти довго не чекав)
+  time_budget: 10        # Час на пошук у секундах (поставив 60, щоб ти довго не чекав)
   metric: "accuracy"
   task: "classification"
