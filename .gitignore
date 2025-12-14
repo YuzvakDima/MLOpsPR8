@@ -1,0 +1,21 @@
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Data (ми не вантажимо дані в Git, бо вони можуть бути великі)
+data/
+outputs/
+
+# MLflow
+mlruns/
+.trash/
+
+# Environment variables
+.env
+
+# IDE settings
+.vscode/
+.idea/
